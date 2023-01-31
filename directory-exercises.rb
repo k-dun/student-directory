@@ -14,9 +14,14 @@ def input_students
   students
 end
 
-def filter_students(names, letter)
-  puts "Here are students whose names start with the letter '#{letter}'"
+def filter_by_letter(names, letter)
+  puts "Here are students whose names start with the letter '#{letter}':"
   names.each { |name| puts name[:name] if name[:name][0] == letter }
+end
+
+def filter_by_length(names, length)
+  puts "Here are the students whose names are shorter than #{length} characters:"
+  names.each { |name| puts name[:name] if name[:name].length < 12 }
 end
 
 def print_header
@@ -36,4 +41,5 @@ students = input_students
 print_header
 print_names(students)
 print_footer(students)
-# filter_students(students, "N")
+# filter_by_letter(students, "N")
+filter_by_length(students, 12)
