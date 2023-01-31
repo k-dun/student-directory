@@ -30,7 +30,11 @@ def print_header
 end
 
 def print_names(names)
-  names.each { |name| puts "#{names.index(name) + 1}. #{name[:name]} (#{name[:cohort]} cohort)" }
+  i = 0
+  while i < names.size do
+    puts "#{i + 1}. #{names[i][:name]} (#{names[i][:cohort]} cohort)"
+    i += 1
+  end
 end
 
 def print_footer(names)
@@ -42,4 +46,4 @@ print_header
 print_names(students)
 print_footer(students)
 # filter_by_letter(students, "N")
-filter_by_length(students, 12)
+# filter_by_length(students, 12)
