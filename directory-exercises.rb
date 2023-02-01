@@ -65,7 +65,7 @@ def print_header
   puts "-----------"
 end
 
-def print_names(names)
+def print_by_name(names)
   i = 0
   while i < names.size do
     print "#{i + 1}. #{names[i][:name]}".ljust(30, " ")
@@ -75,17 +75,31 @@ def print_names(names)
   end
 end
 
+def print_by_cohort(names)
+  i = 0
+  cohorts = []
+  names.each { |student| cohorts << student[:cohort] }
+  cohorts.uniq.each { |cohort|
+    names.each { |student|
+      if student[:cohort] == cohort
+        print "#{i + 1}. #{student[:name]}".ljust(30, " ")
+        puts "(#{student[:cohort].to_s} cohort)".ljust(60, " ")
+        i += 1
+      end
+    } 
+  }
+
+end
+
 def print_footer(names)
   puts "Overall we have #{names.count} great students!"
 end
 
 students = create_student_records
 print_header
-print_names(students)
+print_by_name(students)
 print_footer(students)
 # filter_by_letter(students, "N")
 # filter_by_length(students, 12)
-update_student_records(students)
-print_header
-print_names(students)
-print_footer(students)
+# update_student_records(students)
+# print_by_cohort(students)
