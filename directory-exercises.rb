@@ -1,18 +1,53 @@
-def input_students
-  puts "Please enter the names of the students"
-  puts "To finish, just press return twice"
+def create_student_records
+  puts "Please enter the names and cohorts of the students"
+  puts "(To finish, just type 'stop' when asked for name)"
 
   students = []
 
+  puts "Name: "
   name = gets.chomp
 
-  while !name.empty? do
-    students << { name: name, cohort: :november, age: :age, nationality: :nationality, hobbies: :hobbies}
-    puts "Now we have #{students.count} students"
+  while name != "stop" do
+    name = "Unspecified" if name == ""
+
+    puts "Cohort: "
+    cohort = gets.chomp
+
+    cohort = "Unspecified" if cohort == ""
+
+    students << { name: name, cohort: cohort.to_sym, age: :age, nationality: :nationality, hobbies: :hobbies }
+
+    puts "Now we have #{students.count} student." if students.count == 1
+    puts "Now we have #{students.count} students." if students.count > 1
+
+    puts "Name: "
     name = gets.chomp
   end
 
   students
+end
+
+def update_student_records(names)
+  puts "Which part of the student record do you want to update: "
+  puts "Type 1 / 2"
+  puts "1. Name"
+  puts "2. Cohort"
+  choice = gets.chomp
+  
+  if choice == "1"
+    puts "Which name do you want to update: "
+    name = gets.chomp
+    puts "What is the new name: "
+    updated_name = gets.chomp
+
+    names.select { |student| student[:name] = updated_name if student[:name] == name }
+
+    puts "Student's name updated!"
+  elsif choice == "2"
+    puts "Student's cohort updated!"
+  else
+    puts "Wrong input. Try again."
+  end
 end
 
 def filter_by_letter(names, letter)
@@ -34,7 +69,7 @@ def print_names(names)
   i = 0
   while i < names.size do
     print "#{i + 1}. #{names[i][:name]}".ljust(30, " ")
-    puts "(#{names[i][:cohort]} cohort)".rjust(60, " ")
+    puts "(#{names[i][:cohort].to_s} cohort)".ljust(60, " ")
     
     i += 1
   end
@@ -44,9 +79,13 @@ def print_footer(names)
   puts "Overall we have #{names.count} great students!"
 end
 
-students = input_students
+students = create_student_records
 print_header
 print_names(students)
 print_footer(students)
 # filter_by_letter(students, "N")
 # filter_by_length(students, 12)
+update_student_records(students)
+print_header
+print_names(students)
+print_footer(students)
