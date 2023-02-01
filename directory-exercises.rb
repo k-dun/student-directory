@@ -3,10 +3,11 @@ def input_students
   puts "To finish, just press return twice"
 
   students = []
+
   name = gets.chomp
 
   while !name.empty? do
-    students << { name: name, cohort: :november }
+    students << { name: name, cohort: :november, age: :age, nationality: :nationality, hobbies: :hobbies}
     puts "Now we have #{students.count} students"
     name = gets.chomp
   end
@@ -32,7 +33,9 @@ end
 def print_names(names)
   i = 0
   while i < names.size do
-    puts "#{i + 1}. #{names[i][:name]} (#{names[i][:cohort]} cohort)"
+    print "#{i + 1}. #{names[i][:name]}".ljust(30, " ")
+    puts "(#{names[i][:cohort]} cohort)".rjust(60, " ")
+    
     i += 1
   end
 end
