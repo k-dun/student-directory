@@ -7,21 +7,23 @@ def create_student_records
   puts "Name: "
   name = gets.chomp
 
-  while name != "stop" do
-    name = "Unspecified" if name == ""
+  if name == ""
+    return []
+  else
+    while name != "stop" do
+      puts "Cohort: "
+      cohort = gets.chomp
 
-    puts "Cohort: "
-    cohort = gets.chomp
+      cohort = "Unspecified" if cohort == ""
 
-    cohort = "Unspecified" if cohort == ""
+      students << { name: name, cohort: cohort.to_sym, age: :age, nationality:        :nationality, hobbies: :hobbies }
 
-    students << { name: name, cohort: cohort.to_sym, age: :age, nationality: :nationality, hobbies: :hobbies }
+      puts "Now we have #{students.count} student." if students.count == 1
+      puts "Now we have #{students.count} students." if students.count > 1
 
-    puts "Now we have #{students.count} student." if students.count == 1
-    puts "Now we have #{students.count} students." if students.count > 1
-
-    puts "Name: "
-    name = gets.chomp
+      puts "Name: "
+      name = gets.chomp
+    end
   end
 
   students
@@ -96,9 +98,14 @@ def print_footer(names)
 end
 
 students = create_student_records
-print_header
-print_by_name(students)
-print_footer(students)
+
+if students == []
+  puts "The student list is empty."
+else  
+  print_header
+  print_by_name(students)
+  print_footer(students)
+end
 # filter_by_letter(students, "N")
 # filter_by_length(students, 12)
 # update_student_records(students)
