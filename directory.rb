@@ -1,9 +1,10 @@
 @students = []
 
 def print_menu
-  puts "1. Create student records."
-  puts "2. Print all student records."
-  puts "3. Save student records to file."
+  puts "1. Create student records"
+  puts "2. Print all student records"
+  puts "3. Save student records to students.csv"
+  puts "4. Load student records from students.csv"
   puts "9. Exit."
 end
 
@@ -15,6 +16,8 @@ def process(selection)
     print_all_students
   when "3"
     save_students
+  when "4"
+    load_students
   when "9"
     exit
   else
@@ -67,6 +70,17 @@ def save_students
 
   file.close
 end
+
+def load_students
+  file = File.open("students.csv", "r")
+  file.readlines.each do |line|
+    name, cohort = line.chomp.split(",")
+    @students << { name: name, cohort: cohort.to_sym }
+  end
+  
+  file.close
+end
+
 =begin
 def update_student_records(students)
   puts "Which part of the student record do you want to update: "
