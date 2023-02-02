@@ -3,7 +3,7 @@
 def print_menu
   puts "1. Create student records."
   puts "2. Print all student records."
-  #puts "3. Update student records."
+  puts "3. Save student records to file."
   puts "9. Exit."
 end
 
@@ -13,7 +13,8 @@ def process(selection)
     create_student_records
   when "2"
     print_all_students
-  #when "3"
+  when "3"
+    save_students
   when "9"
     exit
   else
@@ -53,6 +54,18 @@ def create_student_records
       name = gets.chomp
     end
   end
+end
+
+def save_students
+  file = File.open("students.csv", "w")
+
+  @students.each do |student|
+    student_data = [student[:name], student[:cohort]]
+    csv_line = student_data.join(",")
+    file.puts csv_line
+  end
+
+  file.close
 end
 =begin
 def update_student_records(students)
