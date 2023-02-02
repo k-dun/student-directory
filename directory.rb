@@ -28,7 +28,7 @@ end
 def interactive_menu
   loop do
     print_menu
-    process(gets.chomp)
+    process(STDIN.gets.chomp)
   end
 end
 
@@ -37,14 +37,14 @@ def create_student_records
   puts "(To finish, just type 'stop' when asked for name)"
 
   print "Name: "
-  name = gets.chomp
+  name = STDIN.gets.chomp
 
   if name == ""
     return []
   else
     while name != "stop" do
       print "Cohort: "
-      cohort = gets.chomp
+      cohort = STDIN.gets.chomp
 
       cohort = "Unspecified" if cohort == ""
 
@@ -54,7 +54,7 @@ def create_student_records
       puts "Now we have #{@students.count} students." if @students.count > 1
 
       print "Name: "
-      name = gets.chomp
+      name = STDIN.gets.chomp
     end
   end
 end
@@ -71,7 +71,7 @@ def save_students
   file.close
 end
 
-def load_students
+def load_students(filename = "students.csv")
   file = File.open("students.csv", "r")
   file.readlines.each do |line|
     name, cohort = line.chomp.split(",")
@@ -81,30 +81,17 @@ def load_students
   file.close
 end
 
-=begin
-def update_student_records(students)
-  puts "Which part of the student record do you want to update: "
-  puts "Type 1 / 2"
-  puts "1. Name"
-  puts "2. Cohort"
-  choice = gets.chomp
-  
-  if choice == "1"
-    puts "Which name do you want to update: "
-    name = gets.chomp
-    puts "What is the new name: "
-    updated_name = gets.chomp
-
-    students.select { |student| student[:name] = updated_name if student[:name] == name }
-
-    puts "Student's name updated!"
-  elsif choice == "2"
-    puts "Student's cohort updated!"
+def try_load_students
+  filename = ARGV.first
+  return if filename.nil?
+  if File.exist?(filename)
+    load_students(filename)
+    puts "Loaded #{@students.count} from #{filename}"
   else
-    puts "Wrong input. Try again."
+    puts "Sorry #{filename} doesn't exist."
+    exit
   end
 end
-=end
 
 def print_header
   puts "\nThe students of Villains Academy"
@@ -145,4 +132,5 @@ def print_footer
   puts "\nOverall we have #{@students.count} great students!\n"
 end
 
+try_load_students
 interactive_menu
