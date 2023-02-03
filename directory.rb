@@ -1,10 +1,10 @@
 @students = []
 
 def print_menu
-  puts "1. Create student records"
-  puts "2. Print all student records"
-  puts "3. Save student records to students.csv"
-  puts "4. Load student records from students.csv"
+  puts "1. Create student records."
+  puts "2. Print all student records."
+  puts "3. Save student records from file."
+  puts "4. Load student records from file."
   puts "9. Exit."
 end
 
@@ -19,6 +19,7 @@ def process(selection)
   when "4"
     load_students
   when "9"
+    puts "Quitting student directory.."
     exit
   else
     puts "Wrong input. Try again." 
@@ -33,30 +34,40 @@ def interactive_menu
 end
 
 def create_student_records
-  puts "Please enter the names and cohorts of the students"
-  puts "(To finish, just type 'stop' when asked for name)"
-
+  puts "Please enter the names and cohorts of each student."
   print "Name: "
   name = STDIN.gets.chomp
+  
+  next_student = true
+  
+  while next_student do
+    print "Cohort: "
+    cohort = STDIN.gets.chomp
 
-  if name == ""
-    return []
-  else
-    while name != "stop" do
-      print "Cohort: "
-      cohort = STDIN.gets.chomp
+    cohort = "Unspecified" if cohort == ""
 
-      cohort = "Unspecified" if cohort == ""
+    @students << { name: name, cohort: cohort.to_sym, age: :age, nationality: :nationality, hobbies: :hobbies }
 
-      @students << { name: name, cohort: cohort.to_sym, age: :age, nationality: :nationality, hobbies: :hobbies }
+    puts "Now we have #{@students.count} student." if @students.count == 1
+    puts "Now we have #{@students.count} students." if @students.count > 1
+    
+    choice = ""
 
-      puts "Now we have #{@students.count} student." if @students.count == 1
-      puts "Now we have #{@students.count} students." if @students.count > 1
-
-      print "Name: "
-      name = STDIN.gets.chomp
+    until choice == "y" || choice == "n"
+      print "\nDo you want to enter another student info (y/n) : "
+      choice = STDIN.gets.chomp
+      if choice == "y"
+        print "Name: "
+        name = STDIN.gets.chomp
+        break
+      elsif choice == "n"
+        next_student = false
+        break
+      end
     end
   end
+
+  puts "You successfully added records of #{@students.count} students!\n"
 end
 
 def save_students
@@ -69,6 +80,8 @@ def save_students
   end
 
   file.close
+
+  puts "Successfully saved student data to file!\n"
 end
 
 def load_students(filename = "students.csv")
@@ -79,6 +92,8 @@ def load_students(filename = "students.csv")
   end
   
   file.close
+
+  puts "Successfully loaded student data from file!\n"
 end
 
 def try_load_students
@@ -91,7 +106,7 @@ def try_load_students
     return if filename.nil?
     if File.exist?(filename)
       load_students(filename)
-      puts "Loaded #{@students.count} from #{filename}"
+      puts "Loaded #{@students.count} from #{filename}!"
     else
       puts "Sorry #{filename} doesn't exist."
       exit
@@ -138,5 +153,5 @@ def print_footer
   puts "\nOverall we have #{@students.count} great students!\n"
 end
 
-try_load_students
+#try_load_students
 interactive_menu
