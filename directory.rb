@@ -84,15 +84,13 @@ def save_students
       choice = STDIN.gets.chomp
       
       if choice == "y"
-        file = File.open(filename, "w")
-
-        @students.each do |student|
-          student_data = [student[:name], student[:cohort]]
-          csv_line = student_data.join(",")
-          file.puts csv_line
+        File.open(filename, "w") do |file|
+          @students.each do |student|
+            student_data = [student[:name], student[:cohort]]
+            csv_line = student_data.join(",")
+            file.puts csv_line
+          end
         end
-
-        file.close
       elsif choice == "n"
         save_students
       else
@@ -100,29 +98,25 @@ def save_students
         save_students
       end
     else
-      file = File.new(filename, "w+")
-
-      @students.each do |student|
-        student_data = [student[:name], student[:cohort]]
-        csv_line = student_data.join(",")
-        file.puts csv_line
+      File.open(filename, "w+") do |file|
+        @students.each do |student|
+          student_data = [student[:name], student[:cohort]]
+          csv_line = student_data.join(",")
+          file.puts csv_line
+        end
       end
-    
-      file.close
     end
   elsif choice == "2"
     puts "Enter filename: "
     filename = STDIN.gets.chomp
     
-    file = File.open(filename, "w")
-
-    @students.each do |student|
-      student_data = [student[:name], student[:cohort]]
-      csv_line = student_data.join(",")
-      file.puts csv_line
+    File.open(filename, "w") do |file|
+      @students.each do |student|
+        student_data = [student[:name], student[:cohort]]
+        csv_line = student_data.join(",")
+        file.puts csv_line
+      end
     end
-    
-    file.close
   else
     puts "Wrong input. Try again!"
     save_students
@@ -136,13 +130,12 @@ def load_students(filename = "students.csv")
   puts "Enter filename: "
   filename = STDIN.gets.chomp
 
-  file = File.open(filename, "r")
-  file.readlines.each do |line|
-    name, cohort = line.chomp.split(",")
-    @students << { name: name, cohort: cohort.to_sym }
+  File.open(filename, "r") do |file|
+    file.readlines.each do |line|
+      name, cohort = line.chomp.split(",")
+      @students << { name: name, cohort: cohort.to_sym }
+    end
   end
-  
-  file.close
 
   puts "Successfully loaded student data from file!\n"
 end
