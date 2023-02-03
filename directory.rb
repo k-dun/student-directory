@@ -204,5 +204,9 @@ def print_footer
   puts "\nOverall we have #{@students.count} great students!\n"
 end
 
+def print_source_code
+  puts File.read(__FILE__)
+end
+
 #try_load_students
 interactive_menu
