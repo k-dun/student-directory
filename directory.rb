@@ -1,3 +1,5 @@
+require 'csv'
+
 @students = []
 
 def print_menu
@@ -71,57 +73,33 @@ def create_student_records
 end
 
 def save_students
-  puts "1. Save to a new .csv file."
-  puts "2. Save to an existing .csv file."
-  choice = STDIN.gets.chomp
+  print "Enter filename: "
+  filename = STDIN.gets.chomp
 
-  if choice == "1"
-    puts "Enter filename: "
-    filename = STDIN.gets.chomp
-
-    if File.exist?(filename)
-      puts "This file already exists. Do you want to overwrite the data? (y/n)"
-      choice = STDIN.gets.chomp
+  if File.exist?(filename)
+    puts "This file already exists. Do you want to overwrite the data? (y/n)"
+    choice = STDIN.gets.chomp
       
-      if choice == "y"
-        File.open(filename, "w") do |file|
-          @students.each do |student|
-            student_data = [student[:name], student[:cohort]]
-            csv_line = student_data.join(",")
-            file.puts csv_line
-          end
-        end
-      elsif choice == "n"
-        save_students
-      else
-        puts "Wrong input. Try again!"
-        save_students
-      end
-    else
-      File.open(filename, "w+") do |file|
+    if choice == "y"
+      CSV.open(filename, "w+") do |csv|
         @students.each do |student|
-          student_data = [student[:name], student[:cohort]]
-          csv_line = student_data.join(",")
-          file.puts csv_line
+          csv << [student[:name], student[:cohort]]
         end
       end
-    end
-  elsif choice == "2"
-    puts "Enter filename: "
-    filename = STDIN.gets.chomp
-    
-    File.open(filename, "w") do |file|
-      @students.each do |student|
-        student_data = [student[:name], student[:cohort]]
-        csv_line = student_data.join(",")
-        file.puts csv_line
-      end
+    elsif choice == "n"
+      save_students
+    else
+      puts "Wrong input. Try again!"
+      save_students
     end
   else
-    puts "Wrong input. Try again!"
-    save_students
+    CSV.open(filename, "w+") do |csv|
+      @students.each do |student|
+        csv << [student[:name], student[:cohort]]
+      end
+    end
   end
-
+  
   puts "Successfully saved student data to file!\n"
 end
 
@@ -130,11 +108,8 @@ def load_students(filename = "students.csv")
   puts "Enter filename: "
   filename = STDIN.gets.chomp
 
-  File.open(filename, "r") do |file|
-    file.readlines.each do |line|
-      name, cohort = line.chomp.split(",")
-      @students << { name: name, cohort: cohort.to_sym }
-    end
+  CSV.foreach(filename) do |line|
+    @students << { name: line[0], cohort: line[1].to_sym }
   end
 
   puts "Successfully loaded student data from file!\n"
@@ -201,5 +176,4 @@ def print_source_code
   puts File.read(__FILE__)
 end
 
-#try_load_students
 interactive_menu
